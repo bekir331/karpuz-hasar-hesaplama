@@ -532,62 +532,171 @@ function App() {
         <div className="exact-step" style={{ marginTop: '1.5rem' }}>
           <div className="exact-step-title" style={{ backgroundColor: '#e5e7eb' }}>5. Adım: Kalite Kaybı Gerçek Hasar Oranı (Z) (%)</div>
           <div className="exact-formula-box" style={{ padding: '10px', backgroundColor: '#e5e7eb', marginTop: '0' }}>
-            <div style={{ fontWeight: 'bold', fontSize: '11px', textAlign: 'center', marginBottom: '10px' }}>
-              Z (%) = ( D Ort. x ( 1 - <div className="exact-frac" style={{ display:'inline-flex', verticalAlign: 'middle' }}><span className="up" style={{borderBottom: '1px solid #111'}}>H Miktar</span><span className="down">100</span></div> ) ) x <div className="exact-frac" style={{ display:'inline-flex', verticalAlign: 'middle' }}><span className="up" style={{borderBottom: '1px solid #111'}}>Y Ort.</span><span className="down">V Ort.</span></div>
+            
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '15px' }}>
+              <div style={{ fontWeight: 'bold', fontSize: '12px', marginRight: '10px' }}>
+                Z (%) = 
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                {/* Pay */}
+                <div style={{ display: 'flex', alignItems: 'center', paddingBottom: '5px', fontWeight: 'bold', fontSize: '11px' }}>
+                  <span>( D Ort. x ( 1 - </span>
+                  <div className="exact-frac" style={{ margin: '0 5px' }}>
+                    <span className="up" style={{borderBottom: '1px solid #111', paddingBottom: '2px'}}>H Miktar</span>
+                    <span className="down" style={{paddingTop: '2px'}}>100</span>
+                  </div>
+                  <span>) ) x Y Ort.</span>
+                </div>
+                {/* Çizgi */}
+                <div style={{ width: '100%', height: '1px', backgroundColor: '#111' }}></div>
+                {/* Payda */}
+                <div style={{ paddingTop: '5px', fontWeight: 'bold', fontSize: '11px' }}>
+                  V Ort.
+                </div>
+              </div>
             </div>
             
-            <div className="exact-f-math" style={{ justifyContent: 'center', borderTop: '1px solid #111', paddingTop: '10px' }}>
-              <div style={{ marginRight: '10px', textAlign: 'center', fontWeight: 'bold', fontSize: '11px' }}>Z (%) =</div>
-              <span>(</span>
-              <span className="exact-blank">{dOrt.toFixed(2)}</span>
-              <span>x (1 - </span>
-              <div className="exact-frac">
-                <span className="up">{hMiktar.toFixed(2)}</span>
-                <span className="down">100</span>
+            {/* Rakamlı Hali */}
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', borderTop: '1px solid #111', paddingTop: '15px' }}>
+              <div style={{ fontWeight: 'bold', fontSize: '12px', marginRight: '10px' }}>
+                Z (%) = 
               </div>
-              <span>)) x </span>
-              <div className="exact-frac">
-                <span className="up">{yOrt.toFixed(2)}</span>
-                <span className="down">{vOrt.toFixed(2)}</span>
+              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                {/* Pay */}
+                <div style={{ display: 'flex', alignItems: 'center', paddingBottom: '5px' }}>
+                  <span>(</span>
+                  <span className="exact-blank">{dOrt.toFixed(2)}</span>
+                  <span>x ( 1 - </span>
+                  <div className="exact-frac" style={{ margin: '0 5px' }}>
+                    <span className="up" style={{borderBottom: '1px solid #111', paddingBottom: '2px'}}>{hMiktar.toFixed(2)}</span>
+                    <span className="down" style={{paddingTop: '2px'}}>100</span>
+                  </div>
+                  <span>) ) x</span>
+                  <span className="exact-blank" style={{ marginLeft: '5px' }}>{yOrt.toFixed(2)}</span>
+                </div>
+                {/* Çizgi */}
+                <div style={{ width: '100%', height: '1px', backgroundColor: '#111' }}></div>
+                {/* Payda */}
+                <div style={{ paddingTop: '5px' }}>
+                  <span className="exact-blank">{vOrt.toFixed(2)}</span>
+                </div>
               </div>
-              <span>=</span>
-              <div style={{ border: '2px solid #16a34a', color: '#16a34a', padding: '6px 12px', fontWeight: 'bold', fontSize: '14px', marginLeft: '10px', backgroundColor: '#fff' }}>
-                {kaliteGercekHasar.toFixed(2)} %
+              <div style={{ marginLeft: '10px', display: 'flex', alignItems: 'center' }}>
+                <span style={{ fontWeight: 'bold', fontSize: '12px', marginRight: '10px' }}>=</span>
+                <div style={{ border: '2px solid #16a34a', color: '#16a34a', padding: '6px 12px', fontWeight: 'bold', fontSize: '14px', backgroundColor: '#fff' }}>
+                  {kaliteGercekHasar.toFixed(2)} %
+                </div>
               </div>
             </div>
+
           </div>
         </div>
 
         {/* ADIM 6 GÖRSEL */}
         <div className="exact-step" style={{ marginTop: '1.5rem' }}>
-          <div className="exact-step-title">6. Adım: Miktar ve Kalite Yayılmış Hasar Oranı</div>
+          <div className="exact-step-title">6. Adım: Miktar ve Kalite Kaybı Yayılmış Hasar Oranını Hesaplayınız !</div>
           <div className="exact-formula-box" style={{ padding: '10px', backgroundColor: '#e5e7eb' }}>
-            <div style={{ fontWeight: 'bold', fontSize: '11px', textAlign: 'center', marginBottom: '10px' }}>
-              Gerçek Hasar Oranı (%) = ( <div className="exact-frac" style={{ display:'inline-flex', verticalAlign: 'middle' }}><span className="up" style={{borderBottom: '1px solid #111'}}>Kayıp Verim</span><span className="down">V Ort.</span></div> ) x 100
-            </div>
-            <div className="exact-f-math" style={{ justifyContent: 'center', borderTop: '1px solid #111', paddingTop: '10px', marginBottom: '10px' }}>
-              <div style={{ marginRight: '10px', textAlign: 'center', fontWeight: 'bold', fontSize: '11px' }}>Gerçek Hasar<br/>Oranı (%) =</div>
-              <span>(</span>
-              <span className="exact-blank">{kayipVerim.toFixed(2)}</span>
-              <span>/</span>
-              <span className="exact-blank">{vOrt.toFixed(2)}</span>
-              <span>) x 100 = </span>
-              <span className="exact-blank"><strong>{miktarGercekHasarOrani.toFixed(2)} %</strong></span>
-            </div>
             
-            <div style={{ fontWeight: 'bold', fontSize: '11px', textAlign: 'center', marginBottom: '10px', borderTop: '1px dotted #111', paddingTop: '10px' }}>
-              Toplam Yayılmış Hasar Oranı = Gerçek Hasar Oranı (%) + Kalite Kaybı Gerçek Hasar Oranı (Z) (%)
-            </div>
-            <div className="exact-f-math" style={{ justifyContent: 'center', borderTop: '1px solid #111', paddingTop: '10px' }}>
-              <div style={{ marginRight: '10px', textAlign: 'center', fontWeight: 'bold', fontSize: '11px' }}>Toplam =</div>
-              <span className="exact-blank">{miktarGercekHasarOrani.toFixed(2)} %</span>
-              <span>+</span>
-              <span className="exact-blank">{kaliteGercekHasar.toFixed(2)} % (Z)</span>
-              <span>=</span>
-              <div style={{ border: '2px solid #16a34a', color: '#16a34a', padding: '6px 12px', fontWeight: 'bold', fontSize: '14px', marginLeft: '10px', backgroundColor: '#fff' }}>
-                {toplamYayilmisHasar.toFixed(2)} %
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '15px' }}>
+              <div style={{ fontWeight: 'bold', fontSize: '12px', marginRight: '10px', textAlign: 'center' }}>
+                Gerçek<br/>Hasar<br/>Oranı<br/>(%)<br/>=
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                {/* Pay */}
+                <div style={{ display: 'flex', alignItems: 'center', paddingBottom: '5px' }}>
+                  <span>(</span>
+                  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', margin: '0 5px', fontSize: '11px', fontWeight: 'bold' }}>
+                    <span>Mevcut</span>
+                    <span>Verim</span>
+                    <span>(D Ort.)</span>
+                  </div>
+                  <span>x</span>
+                  <div className="exact-frac" style={{ margin: '0 5px' }}>
+                    <span className="up" style={{borderBottom: '1px solid #111', paddingBottom: '2px'}}>H Miktar</span>
+                    <span className="down" style={{paddingTop: '2px'}}>100</span>
+                  </div>
+                  <span>) + (</span>
+                  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', margin: '0 5px', fontSize: '11px', fontWeight: 'bold' }}>
+                    <span>Kalan Verim</span>
+                    <span>V Ort. - (D Ort. + F Ort.)</span>
+                  </div>
+                  <span>x</span>
+                  <div className="exact-frac" style={{ margin: '0 5px' }}>
+                    <span className="up" style={{borderBottom: '1px solid #111', paddingBottom: '2px'}}>H Kalan</span>
+                    <span className="down" style={{paddingTop: '2px'}}>100</span>
+                  </div>
+                  <span>)</span>
+                </div>
+                {/* Çizgi */}
+                <div style={{ width: '100%', height: '1px', backgroundColor: '#111' }}></div>
+                {/* Payda */}
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', paddingTop: '5px', fontSize: '11px', fontWeight: 'bold' }}>
+                  <span>Alınabilecek Toplam Ürün Miktarı</span>
+                  <span>(V Ort.)</span>
+                </div>
+              </div>
+              <div style={{ marginLeft: '10px', fontWeight: 'bold', fontSize: '12px' }}>
+                x 100 = 
               </div>
             </div>
+
+            {/* Rakamlı Hali */}
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '20px' }}>
+              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                {/* Pay */}
+                <div style={{ display: 'flex', alignItems: 'center', paddingBottom: '5px' }}>
+                  <span>(</span>
+                  <span className="exact-blank">{dOrt.toFixed(2)}</span>
+                  <span>x</span>
+                  <div className="exact-frac" style={{ margin: '0 5px' }}>
+                    <span className="up" style={{borderBottom: '1px solid #111', paddingBottom: '2px'}}>{hMiktar.toFixed(2)}</span>
+                    <span className="down" style={{paddingTop: '2px'}}>100</span>
+                  </div>
+                  <span>) + (</span>
+                  <span className="exact-blank">{(vOrt - (dOrt + fOrt)).toFixed(2)}</span>
+                  <span>x</span>
+                  <div className="exact-frac" style={{ margin: '0 5px' }}>
+                    <span className="up" style={{borderBottom: '1px solid #111', paddingBottom: '2px'}}>{hKalan.toFixed(2)}</span>
+                    <span className="down" style={{paddingTop: '2px'}}>100</span>
+                  </div>
+                  <span>)</span>
+                </div>
+                {/* Çizgi */}
+                <div style={{ width: '100%', height: '1px', backgroundColor: '#111' }}></div>
+                {/* Payda */}
+                <div style={{ paddingTop: '5px' }}>
+                  <span className="exact-blank">{vOrt.toFixed(2)}</span>
+                </div>
+              </div>
+              <div style={{ marginLeft: '10px', display: 'flex', alignItems: 'center' }}>
+                <span style={{ fontWeight: 'bold', fontSize: '12px', marginRight: '10px' }}>x 100 = </span>
+                <span className="exact-blank"><strong>{miktarGercekHasarOrani.toFixed(2)}</strong></span>
+              </div>
+            </div>
+
+            {/* Alt Kısım - Toplam Yayılmış Hasar */}
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', borderTop: '1px solid #111', paddingTop: '15px' }}>
+              <div style={{ fontWeight: 'bold', fontSize: '12px', textAlign: 'center', width: '20%' }}>
+                Miktar ve Kalite Kaybı<br/>Yayılmış Hasar Oranı
+              </div>
+              <div style={{ fontWeight: 'bold', fontSize: '14px', textAlign: 'center', width: '5%' }}>=</div>
+              <div style={{ fontWeight: 'bold', fontSize: '12px', textAlign: 'center', width: '20%' }}>
+                Gerçek Hasar Oranı
+              </div>
+              <div style={{ fontWeight: 'bold', fontSize: '14px', textAlign: 'center', width: '5%' }}>+</div>
+              <div style={{ fontWeight: 'bold', fontSize: '12px', textAlign: 'center', width: '25%' }}>
+                Kalite Kaybı Gerçek<br/>Hasar Oranı (Z)
+              </div>
+              <div style={{ fontWeight: 'bold', fontSize: '14px', textAlign: 'center', width: '5%' }}>=</div>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '20%' }}>
+                <span className="exact-blank" style={{ fontSize: '13px' }}>{miktarGercekHasarOrani.toFixed(2)}</span>
+                <span style={{ margin: '0 5px', fontWeight: 'bold' }}>+</span>
+                <span className="exact-blank" style={{ fontSize: '13px' }}>{kaliteGercekHasar.toFixed(2)}</span>
+                <span style={{ margin: '0 5px', fontWeight: 'bold' }}>=</span>
+                <span className="exact-blank" style={{ fontSize: '15px' }}><strong>{toplamYayilmisHasar.toFixed(2)}</strong></span>
+              </div>
+            </div>
+
           </div>
         </div>
 

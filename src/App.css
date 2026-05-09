@@ -78,6 +78,24 @@ body {
   background: transparent;
 }
 
+.btn-row-clear {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  opacity: 0.6;
+  transition: opacity 0.2s;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+.btn-row-clear:hover {
+  opacity: 1;
+}
+
 .btn-modern {
   padding: 10px 20px;
   border-radius: 8px;

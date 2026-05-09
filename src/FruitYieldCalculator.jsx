@@ -32,8 +32,29 @@ const FruitYieldCalculator = () => {
     return { f, total };
   };
 
+  const activeSamples = samples.filter(s => Object.values(s).some(val => val !== ''));
+  const activeCount = activeSamples.length || 1;
   const results = samples.map(calculateSampleResults);
-  const avgYield = results.reduce((acc, curr) => acc + curr.total, 0) / 6;
+  
+  const totalSum = samples.reduce((acc, s) => {
+    if (Object.values(s).some(val => val !== '')) {
+      return acc + calculateSampleResults(s).total;
+    }
+    return acc;
+  }, 0);
+  
+  const avgYield = totalSum / activeCount;
+
+  const getFormulaText = () => {
+    if (activeSamples.length === 0) return "(0) / 0";
+    const indices = [];
+    samples.forEach((s, i) => {
+      if (Object.values(s).some(val => val !== '')) {
+        indices.push(i + 1);
+      }
+    });
+    return `(${indices.join('+')}) / ${indices.length}`;
+  };
 
   return (
     <div className="form-card">
@@ -110,7 +131,7 @@ const FruitYieldCalculator = () => {
       <div className="exact-result-box" style={{ marginTop: '20px' }}>
         <div className="exact-res-title">Ortalama Verim (Kg/ağaç)</div>
         <div className="exact-res-math" style={{ fontSize: '24px' }}>
-          = (1+2+3+4+5+6) / 6 = <strong style={{ color: '#16a34a' }}>{avgYield.toFixed(2)} kg / Ağaç</strong>
+          = {getFormulaText()} = <strong style={{ color: '#16a34a' }}>{avgYield.toFixed(2)} kg / Ağaç</strong>
         </div>
       </div>
     </div>

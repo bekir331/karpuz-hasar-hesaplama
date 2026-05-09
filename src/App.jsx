@@ -25,10 +25,10 @@ function App() {
     if (v === '' || v === undefined || v === null) return 0;
     if (typeof v === 'string') {
       const normalized = v.replace(',', '.');
-      const num = Number(normalized);
+      const num = parseFloat(normalized);
       return isNaN(num) ? 0 : num;
     }
-    return Number(v);
+    return parseFloat(v) || 0;
   };
 
   // İnsan gibi hesaplama fonksiyonları (Küsuratı yuvarlamak yerine kesip atma / düz hesap)
@@ -69,7 +69,8 @@ function App() {
     const t = n(r.r) > 0 ? trunc2((n(r.s) * 100) / n(r.r)) : 0;
     const totalN = n(r.n1) + n(r.n2) + n(r.n3) + n(r.n4);
     const y = totalN > 0 ? trunc2(((n(r.n2) * 25) + (n(r.n3) * 50) + (n(r.n4) * 75)) / totalN) : 0;
-    return { ...r, p, t, y };
+    const kalan = n(r.r) - (n(r.s) + totalN);
+    return { ...r, p, t, y, kalan };
   });
   const pOrt = calculateTableAvg2(t2Rows, 'p', ['j']);
   const tOrt = calculateTableAvg2(t2Rows, 't', ['r', 's']);
@@ -106,10 +107,12 @@ function App() {
     const a = [...tablo1];
     a[i] = { ...a[i], [f]: v };
 
-    // Otomatik Doldurma: İlk satıra A, B veya G girilince diğer boş satırlara da kopyala
+    // Otomatik Doldurma: İlk satıra A, B veya G girilince diğer satırlara da kopyala
     if (i === 0 && (f === 'a' || f === 'b' || f === 'g')) {
+      const oldValue = tablo1[0][f];
       for (let j = 1; j < a.length; j++) {
-        if (a[j][f] === '') {
+        // Eğer alt satır boşsa VEYA üst satırın eski değeriyle aynıysa (yani kullanıcı değiştirmemişse) güncelle
+        if (a[j][f] === '' || a[j][f] === oldValue) {
           a[j] = { ...a[j], [f]: v };
         }
       }
@@ -249,15 +252,15 @@ function App() {
                     {t1Rows.map((r, i) => (
                       <tr key={i}>
                         <td>{i + 1}</td>
-                        <td><input type="number" value={r.a} onChange={e => handleT1(i, 'a', e.target.value)} /></td>
-                        <td><input type="number" value={r.b} onChange={e => handleT1(i, 'b', e.target.value)} /></td>
+                        <td><input type="text" inputMode="decimal" value={r.a} onChange={e => handleT1(i, 'a', e.target.value)} /></td>
+                        <td><input type="text" inputMode="decimal" value={r.b} onChange={e => handleT1(i, 'b', e.target.value)} /></td>
                         <td className="res">{r.cVal.toFixed(0)}</td>
-                        <td><input type="number" value={r.e} onChange={e => handleT1(i, 'e', e.target.value)} /></td>
-                        <td><input type="number" value={r.g} onChange={e => handleT1(i, 'g', e.target.value)} /></td>
+                        <td><input type="text" inputMode="decimal" value={r.e} onChange={e => handleT1(i, 'e', e.target.value)} /></td>
+                        <td><input type="text" inputMode="decimal" value={r.g} onChange={e => handleT1(i, 'g', e.target.value)} /></td>
                         <td className="res">{r.d.toFixed(2)}</td>
-                        <td><input type="number" value={r.iH} onChange={e => handleT1(i, 'iH', e.target.value)} /></td>
+                        <td><input type="text" inputMode="decimal" value={r.iH} onChange={e => handleT1(i, 'iH', e.target.value)} /></td>
                         <td className="res">{r.f.toFixed(2)}</td>
-                        <td><input type="number" value={r.iA} onChange={e => handleT1(i, 'iA', e.target.value)} /></td>
+                        <td><input type="text" inputMode="decimal" value={r.iA} onChange={e => handleT1(i, 'iA', e.target.value)} /></td>
                         <td className="res">{r.v.toFixed(2)}</td>
                         <td><button className="btn-row-clear" onClick={() => clearRowT1(i)}>🗑️</button></td>
                       </tr>
@@ -286,6 +289,7 @@ function App() {
                       <th colSpan="2">Tam Hasar</th>
                       <th colSpan="3">Meyve ve Çiçek Hasar Oranı</th>
                       <th colSpan="5">Kalite Kaybı</th>
+                      <th rowSpan="3" style={{backgroundColor: '#fefce8', color: '#854d0e', fontSize: '10px'}}>Kalan<br/>R-Hepsi</th>
                       <th rowSpan="3" style={{ width: '30px' }}></th>
                     </tr>
                     <tr style={{ fontSize: '10px' }}>
@@ -310,16 +314,25 @@ function App() {
                     {t2Rows.map((r, i) => (
                       <tr key={i}>
                         <td>{i + 1}</td>
-                        <td><input type="number" value={r.j} onChange={e => handleT2(i, 'j', e.target.value)} /></td>
+                        <td><input type="text" inputMode="decimal" value={r.j} onChange={e => handleT2(i, 'j', e.target.value)} /></td>
                         <td className="res">{r.p}%</td>
-                        <td><input type="number" value={r.r} onChange={e => handleT2(i, 'r', e.target.value)} /></td>
-                        <td><input type="number" value={r.s} onChange={e => handleT2(i, 's', e.target.value)} /></td>
+                        <td><input type="text" inputMode="decimal" value={r.r} onChange={e => handleT2(i, 'r', e.target.value)} /></td>
+                        <td><input type="text" inputMode="decimal" value={r.s} onChange={e => handleT2(i, 's', e.target.value)} /></td>
                         <td className="res">{r.t.toFixed(2)}%</td>
-                        <td><input type="number" value={r.n1} onChange={e => handleT2(i, 'n1', e.target.value)} /></td>
-                        <td><input type="number" value={r.n2} onChange={e => handleT2(i, 'n2', e.target.value)} /></td>
-                        <td><input type="number" value={r.n3} onChange={e => handleT2(i, 'n3', e.target.value)} /></td>
-                        <td><input type="number" value={r.n4} onChange={e => handleT2(i, 'n4', e.target.value)} /></td>
+                        <td><input type="text" inputMode="decimal" value={r.n1} onChange={e => handleT2(i, 'n1', e.target.value)} /></td>
+                        <td><input type="text" inputMode="decimal" value={r.n2} onChange={e => handleT2(i, 'n2', e.target.value)} /></td>
+                        <td><input type="text" inputMode="decimal" value={r.n3} onChange={e => handleT2(i, 'n3', e.target.value)} /></td>
+                        <td><input type="text" inputMode="decimal" value={r.n4} onChange={e => handleT2(i, 'n4', e.target.value)} /></td>
                         <td className="res">{r.y.toFixed(2)}%</td>
+                        <td style={{ 
+                          fontWeight: 'bold', 
+                          backgroundColor: r.kalan === 0 ? '#dcfce7' : (r.kalan < 0 ? '#fee2e2' : '#fefce8'),
+                          color: r.kalan === 0 ? '#166534' : (r.kalan < 0 ? '#991b1b' : '#854d0e'),
+                          textAlign: 'center',
+                          fontSize: '12px'
+                        }}>
+                          {r.kalan}
+                        </td>
                         <td><button className="btn-row-clear" onClick={() => clearRowT2(i)}>🗑️</button></td>
                       </tr>
                     ))}
@@ -332,6 +345,7 @@ function App() {
                       <td className="res"><strong>T Ort.<br />{tOrt.toFixed(2)}%</strong></td>
                       <td colSpan="4"></td>
                       <td className="res"><strong>Y Ort.<br />{yOrt.toFixed(2)}%</strong></td>
+                      <td></td>
                       <td></td>
                     </tr>
                   </tfoot>
@@ -412,7 +426,7 @@ function App() {
                     <div className="exact-f-label">Dal ve Yapraklardaki<br />Hasarın Verime Etkisi<br />(Z)</div>
                     <div className="exact-f-math">
                       <span className="exact-blank" style={{ minWidth: '40px' }}>
-                        <input type="number" style={{ border: 'none', width: '40px', textAlign: 'center', fontWeight: 'bold', backgroundColor: 'transparent' }} value={yaprakHasari} onChange={e => setYaprakHasari(e.target.value)} />
+                        <input type="text" inputMode="decimal" style={{ border: 'none', width: '40px', textAlign: 'center', fontWeight: 'bold', backgroundColor: 'transparent' }} value={yaprakHasari} onChange={e => setYaprakHasari(e.target.value)} />
                       </span>
                       <span>% x</span>
                       <div className="exact-frac">
@@ -446,7 +460,7 @@ function App() {
                   <div className="exact-box-col">
                     <div className="exact-box-title">Dal ve Yapraklardaki Hasarın Verime Etkisi<br />(U)</div>
                     <div className="exact-box-val">
-                      <input type="number" style={{ border: 'none', borderBottom: '1px dotted #111', width: '50px', textAlign: 'center', fontWeight: 'bold', fontSize: '14px', backgroundColor: 'transparent' }} value={yaprakHasari} onChange={e => setYaprakHasari(e.target.value)} /> <span className="pct">%</span>
+                      <input type="text" inputMode="decimal" style={{ border: 'none', borderBottom: '1px dotted #111', width: '50px', textAlign: 'center', fontWeight: 'bold', fontSize: '14px', backgroundColor: 'transparent' }} value={yaprakHasari} onChange={e => setYaprakHasari(e.target.value)} /> <span className="pct">%</span>
                     </div>
                   </div>
                 </div>
@@ -489,7 +503,7 @@ function App() {
                     <div className="exact-f-label">Dal ve Yapraklardaki<br />Hasarın Verime Etkisi (Z)</div>
                     <div className="exact-f-math">
                       <span className="exact-blank" style={{ minWidth: '40px' }}>
-                        <input type="number" style={{ border: 'none', width: '40px', textAlign: 'center', fontWeight: 'bold', backgroundColor: 'transparent' }} value={yaprakHasari} onChange={e => setYaprakHasari(e.target.value)} />
+                        <input type="text" inputMode="decimal" style={{ border: 'none', width: '40px', textAlign: 'center', fontWeight: 'bold', backgroundColor: 'transparent' }} value={yaprakHasari} onChange={e => setYaprakHasari(e.target.value)} />
                       </span>
                       <span>% x</span>
                       <div className="exact-frac">
@@ -762,7 +776,7 @@ function App() {
               <div className="exact-step-title" style={{ backgroundColor: '#e5e7eb' }}>7. Adım: Poliçe Verimi Üzerinden Hasar Yayma</div>
 
               <div style={{ textAlign: 'center', padding: '10px 0', fontSize: '12px', fontWeight: 'bold', borderBottom: '1px solid #ccc' }}>
-                Poliçe Verimi: <input type="number" style={{ border: '1px solid #111', width: '80px', padding: '2px', fontWeight: 'bold', textAlign: 'center', marginLeft: '5px' }} value={policeInfo.policeVerimi} onChange={e => setPoliceInfo({ ...policeInfo, policeVerimi: e.target.value })} /> Kg/Da
+                Poliçe Verimi: <input type="text" inputMode="decimal" style={{ border: '1px solid #111', width: '80px', padding: '2px', fontWeight: 'bold', textAlign: 'center', marginLeft: '5px' }} value={policeInfo.policeVerimi} onChange={e => setPoliceInfo({ ...policeInfo, policeVerimi: e.target.value })} /> Kg/Da
               </div>
 
               <div className="exact-formula-box" style={{ padding: '10px', backgroundColor: '#e5e7eb', marginTop: '0' }}>
@@ -804,15 +818,15 @@ function App() {
               <div style={{ display: 'flex', justifyContent: 'space-evenly', padding: '15px 0', fontSize: '12px', fontWeight: 'bold', borderBottom: '1px solid #ccc' }}>
                 <div style={{ display: 'flex', alignItems: 'center' }}>
                   <span style={{ marginRight: '8px' }}>Sigortalı Alan (Da):</span>
-                  <input type="number" style={{ border: '1px solid #111', width: '80px', padding: '4px', fontWeight: 'bold', textAlign: 'center' }} value={policeInfo.sigortaliAlan} onChange={e => setPoliceInfo({ ...policeInfo, sigortaliAlan: e.target.value })} />
+                  <input type="text" inputMode="decimal" style={{ border: '1px solid #111', width: '80px', padding: '4px', fontWeight: 'bold', textAlign: 'center' }} value={policeInfo.sigortaliAlan} onChange={e => setPoliceInfo({ ...policeInfo, sigortaliAlan: e.target.value })} />
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center' }}>
                   <span style={{ marginRight: '8px' }}>Hasarlı Alan (Da):</span>
-                  <input type="number" style={{ border: '1px solid #111', width: '80px', padding: '4px', fontWeight: 'bold', textAlign: 'center' }} value={policeInfo.hasarliAlan} onChange={e => setPoliceInfo({ ...policeInfo, hasarliAlan: e.target.value })} />
+                  <input type="text" inputMode="decimal" style={{ border: '1px solid #111', width: '80px', padding: '4px', fontWeight: 'bold', textAlign: 'center' }} value={policeInfo.hasarliAlan} onChange={e => setPoliceInfo({ ...policeInfo, hasarliAlan: e.target.value })} />
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center' }}>
                   <span style={{ marginRight: '8px' }}>Hasar Oranı (%):</span>
-                  <input type="number" style={{ border: '1px solid #111', width: '80px', padding: '4px', fontWeight: 'bold', textAlign: 'center' }} value={policeInfo.hasarOraniAlan} onChange={e => setPoliceInfo({ ...policeInfo, hasarOraniAlan: e.target.value })} />
+                  <input type="text" inputMode="decimal" style={{ border: '1px solid #111', width: '80px', padding: '4px', fontWeight: 'bold', textAlign: 'center' }} value={policeInfo.hasarOraniAlan} onChange={e => setPoliceInfo({ ...policeInfo, hasarOraniAlan: e.target.value })} />
                 </div>
               </div>
 

@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import './App.css';
+import FruitYieldCalculator from './FruitYieldCalculator';
 
 function App() {
+  const [activePage, setActivePage] = useState('watermelon'); // 'watermelon' or 'fruit'
   const [policeInfo, setPoliceInfo] = useState({
     policeNo: '', adSoyad: '', eksper: '', tarih: '', gelismeEvresi: '', cesit: '',
     policeVerimi: '', sigortaliAlan: '', hasarliAlan: '', hasarOraniAlan: ''
@@ -111,8 +113,22 @@ function App() {
             <circle cx="50" cy="50" r="45" fill="#1e293b" />
             <text x="50" y="65" fontSize="40" textAnchor="middle" fill="white">🍉</text>
           </svg>
-          TARSİM KAVUN/KARPUZ PANEL
+          TARSİM HESAPLAMA PANELİ
         </div>
+        <nav className="nav-menu">
+          <div 
+            className={`nav-item ${activePage === 'watermelon' ? 'active' : ''}`} 
+            onClick={() => setActivePage('watermelon')}
+          >
+            KAVUN / KARPUZ
+          </div>
+          <div 
+            className={`nav-item ${activePage === 'fruit' ? 'active' : ''}`} 
+            onClick={() => setActivePage('fruit')}
+          >
+            MEYVE VERİM TESPİTİ
+          </div>
+        </nav>
         <div className="actions">
           <button className="btn-modern btn-red" onClick={() => window.location.reload()}>SIFIRLA</button>
           <button className="btn-modern btn-blue" onClick={() => window.print()}>YAZDIR / PDF</button>
@@ -120,7 +136,9 @@ function App() {
       </header>
 
       <main className="form-container">
-        {/* POLIÇE BILGILERI */}
+        {activePage === 'watermelon' ? (
+          <>
+            {/* POLIÇE BILGILERI */}
         <div className="form-card">
           <div className="row">
             <div className="col"><strong>POLİÇE NO:</strong> <input type="text" value={policeInfo.policeNo} onChange={e => setPoliceInfo({ ...policeInfo, policeNo: e.target.value })} /></div>
@@ -787,6 +805,10 @@ function App() {
           <div className="sig-line">Eksper İmza: __________________</div>
           <div className="sig-line">Eksper İmza: __________________</div>
         </footer>
+          </>
+        ) : (
+          <FruitYieldCalculator />
+        )}
       </main>
     </div>
   );

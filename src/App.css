@@ -38,6 +38,44 @@ body {
   font-weight: 800;
   font-size: 1.2rem;
   letter-spacing: 1px;
+  display: flex;
+  align-items: center;
+}
+
+.nav-menu {
+  display: flex;
+  gap: 1rem;
+}
+
+.nav-item {
+  padding: 8px 16px;
+  cursor: pointer;
+  border-radius: 6px;
+  font-weight: 700;
+  transition: all 0.2s;
+  font-size: 13px;
+  background: rgba(255,255,255,0.05);
+}
+
+.nav-item:hover {
+  background: rgba(255,255,255,0.15);
+}
+
+.nav-item.active {
+  background: var(--primary-blue);
+  color: white;
+}
+
+.res-row {
+  background: #f8fafc;
+}
+
+.res-row-highlight {
+  background: #dcfce7 !important;
+}
+
+.res-row-highlight .res {
+  background: transparent;
 }
 
 .btn-modern {
